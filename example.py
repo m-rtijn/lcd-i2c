@@ -17,8 +17,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 from LCD_i2c import LCD_i2c
+from time import sleep
 
 addr = raw_input("Address = ")
 
 lcd = LCD_i2c(int(addr))
 lcd.lcd_print("test", 1)
+sleep(5)
+lcd.lcd_clear()
