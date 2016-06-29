@@ -106,11 +106,11 @@ class LCD_i2c:
         line_addressess = self.LCD_LINE_1_ADDRESS
         if line == 1:
             line_address = self.LCD_LINE_1_ADDRESS
-        else if line == 2:
+        elif line == 2:
             line_address = self.LCD_LINE_2_ADDRESS
-        else if line == 3:
+        elif line == 3:
             line_address = self.LCD_LINE_3_ADDRESS
-        else if line == 4:
+        elif line == 4:
             line_address = self.LCD_LINE_4_ADDRESS
         self.lcd_write_byte(line_address, self.LCD_CMD)
 
