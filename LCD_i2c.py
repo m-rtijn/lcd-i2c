@@ -100,7 +100,7 @@ class LCD_i2c:
         line: the line on which it will be printed
         """
 
-        string = string.ljust(self.LCD_WIDTH, " ")
+        string = string.ljust(self.lcd_width, " ")
 
         # Tell where in the memory the string has to be written to
         line_addressess = self.LCD_LINE_1_ADDRESS
@@ -114,7 +114,7 @@ class LCD_i2c:
             line_address = self.LCD_LINE_4_ADDRESS
         self.lcd_write_byte(line_address, self.LCD_CMD)
 
-        for i in range(self.LCD_WIDTH): # Extra characters will be ignored.
+        for i in range(self.lcd_width): # Extra characters will be ignored.
             self.lcd_write_byte(ord(string[i]), self.LCD_CHR)
 
 if __name__ == "__main__":
