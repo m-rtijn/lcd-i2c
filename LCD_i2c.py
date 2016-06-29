@@ -114,7 +114,7 @@ class LCD_i2c:
             line_address = self.LCD_LINE_4_ADDRESS
         self.lcd_write_byte(line_address, self.LCD_CMD)
 
-        for i in range(LCD_WIDTH): # Extra characters will be ignored.
+        for i in range(self.LCD_WIDTH): # Extra characters will be ignored.
             self.lcd_write_byte(ord(string[i]), self.LCD_CHR)
 
 if __name__ == "__main__":
