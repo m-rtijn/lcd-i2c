@@ -56,25 +56,25 @@ class LCD_i2c:
         self.lcd_width = lcd_width
         self.lcd_max_lines = lcd_max_lines
         if lcd_backlight:
-            self.lcd_backlight = LCD_BACKLIGHT_ON
+            self.lcd_backlight = self.LCD_BACKLIGHT_ON
         else:
-            self.lcd_backlight = LCD_BACKLIGHT_OFF
+            self.lcd_backlight = self.LCD_BACKLIGHT_OFF
 
         # Initialise display
-        lcd_write_byte(0x33, self.LCD_CMD) # 110011 Initialise
-        lcd_write_byte(0x32, self.LCD_CMD) # 110010 Initialise
-        lcd_write_byte(0x06, self.LCD_CMD) # 000110 Cursor move direction
-        lcd_write_byte(0x0C, self.LCD_CMD) # 001100 Display On,Cursor Off, Blink Off
-        lcd_write_byte(0x28, self.LCD_CMD) # 101000 Data length, number of lines, font size
-        lcd_write_byte(0x01, self.LCD_CMD) # 000001 Clear display
+        self.lcd_write_byte(0x33, self.LCD_CMD) # 110011 Initialise
+        self.lcd_write_byte(0x32, self.LCD_CMD) # 110010 Initialise
+        self.lcd_write_byte(0x06, self.LCD_CMD) # 000110 Cursor move direction
+        self.lcd_write_byte(0x0C, self.LCD_CMD) # 001100 Display On,Cursor Off, Blink Off
+        self.lcd_write_byte(0x28, self.LCD_CMD) # 101000 Data length, number of lines, font size
+        self.lcd_write_byte(0x01, self.LCD_CMD) # 000001 Clear display
         sleep(self.E_DELAY)
 
     def lcd_toggle_enable(self, byte):
         """Enables toggle."""
         sleep(self.E_DELAY)
-        self.bus.write_byte(self.address, (bits | self.ENABLE))
+        self.bus.write_byte(self.address, (byte | self.ENABLE))
         sleep(self.E_PULSE)
-        self.bus.write_byte(self.address,(bits & ~self.ENABLE))
+        self.bus.write_byte(self.address,(byte & ~self.ENABLE))
         sleep(self.E_DELAY)
 
     def lcd_write_byte(self, byte, mode):
