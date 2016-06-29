@@ -92,3 +92,27 @@ class LCD_i2c:
 
         self.bus.write_byte(self.address, byte_low)
         self.lcd_toggle_enable(byte_low)
+
+    def lcd_print(self, string, line):
+        """Sends a string to display on the LCD.
+
+        string: the string to be printed
+        line: the line on which it will be printed
+        """
+
+        string = string.ljust(self.LCD_WIDTH, " ")
+
+        # Tell where in the memory the string has to be written to
+        line_addressess = self.LCD_LINE_1_ADDRESS
+        if line == 1:
+            line_address = self.LCD_LINE_1_ADDRESS
+        else if line == 2:
+            line_address = self.LCD_LINE_2_ADDRESS
+        else if line == 3:
+            line_address = self.LCD_LINE_3_ADDRESS
+        else if line == 4:
+            line_address = self.LCD_LINE_4_ADDRESS
+        self.lcd_write_byte(line_address, self.LCD_CMD)
+
+        for i in range(LCD_WIDTH): # Extra characters will be ignored.
+            self.lcd_write_byte(ord(string[i]), self.LCD_CHR)
