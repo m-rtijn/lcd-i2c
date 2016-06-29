@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 import smbus
+from time import sleep
 
 class LCD_i2c:
 
@@ -60,18 +61,21 @@ class LCD_i2c:
             self.lcd_backlight = LCD_BACKLIGHT_OFF
 
         # Initialise display
-        lcd_byte(0x33,LCD_CMD) # 110011 Initialise
-        lcd_byte(0x32,LCD_CMD) # 110010 Initialise
-        lcd_byte(0x06,LCD_CMD) # 000110 Cursor move direction
-        lcd_byte(0x0C,LCD_CMD) # 001100 Display On,Cursor Off, Blink Off
-        lcd_byte(0x28,LCD_CMD) # 101000 Data length, number of lines, font size
-        lcd_byte(0x01,LCD_CMD) # 000001 Clear display
-        time.sleep(E_DELAY)
+        lcd_write_byte(0x33, self.LCD_CMD) # 110011 Initialise
+        lcd_write_byte(0x32, self.LCD_CMD) # 110010 Initialise
+        lcd_write_byte(0x06, self.LCD_CMD) # 000110 Cursor move direction
+        lcd_write_byte(0x0C, self.LCD_CMD) # 001100 Display On,Cursor Off, Blink Off
+        lcd_write_byte(0x28, self.LCD_CMD) # 101000 Data length, number of lines, font size
+        lcd_write_byte(0x01, self.LCD_CMD) # 000001 Clear display
+        sleep(self.E_DELAY)
 
     def lcd_toggle_enable(self, byte):
         """Enables toggle."""
-        time.sleep(self.E_DELAY)
-        bus.write_byte(self.address, (byte | ENABLE))
+        sleep(self.E_DELAY)
+        self.bus.write_byte(self.address, (bits | self.ENABLE))
+        sleep(self.E_PULSE)
+        self.bus.write_byte(self.address,(bits & ~self.ENABLE))
+        sleep(self.E_DELAY)
 
     def lcd_write_byte(self, byte, mode):
         """Send one byte of data to the i2c backpack.
@@ -82,3 +86,9 @@ class LCD_i2c:
 
         byte_high = mode | (byte & 0xF0) | self.lcd_backlight
         byte_low = mode | (byte << 4) & 0xF0 | self.lcd_backlight
+
+        self.bus.write_byte(self.address, byte_high)
+        self.lcd_toggle_enable(byte_high)
+
+        self.bus.write_byte(self.address, byte_low)
+        self.lcd_toggle_enable(byte_low)
