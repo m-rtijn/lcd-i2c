@@ -103,7 +103,7 @@ class LCD_i2c:
         string = string.ljust(self.lcd_width, " ")
 
         # Tell where in the memory the string has to be written to
-        line_addressess = self.LCD_LINE_1_ADDRESS
+        line_address = self.LCD_LINE_1_ADDRESS
         if line == 1:
             line_address = self.LCD_LINE_1_ADDRESS
         elif line == 2:
@@ -116,6 +116,12 @@ class LCD_i2c:
 
         for i in range(self.lcd_width): # Extra characters will be ignored.
             self.lcd_write_byte(ord(string[i]), self.LCD_CHR)
+
+    def lcd_clear(self):
+        """Clears all the text on the LCD."""
+
+        for i in range(self.lcd_max_lines):
+            self.lcd_print(" ", i)
 
 if __name__ == "__main__":
     lcd = LCD_i2c()
