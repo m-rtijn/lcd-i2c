@@ -116,3 +116,7 @@ class LCD_i2c:
 
         for i in range(LCD_WIDTH): # Extra characters will be ignored.
             self.lcd_write_byte(ord(string[i]), self.LCD_CHR)
+
+if __name__ == "__main__":
+    lcd = LCD_i2c()
+    lcd.lcd_print("test", 1)
