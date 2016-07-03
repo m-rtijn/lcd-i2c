@@ -1,4 +1,4 @@
-# lcd-i2c-Python
+# lcd-i2c
 
 A Python module to handle the I2C communication between a Raspberry Pi and an
 i2c backpack for a 16x2 (or other size) char LCD.
