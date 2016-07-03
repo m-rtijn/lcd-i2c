@@ -93,9 +93,11 @@ class LCD_i2c:
         self.bus.write_byte(self.address, byte_low)
         self.lcd_toggle_enable(byte_low)
 
-    def lcd_print(self, string, line):
-        """Sends a string to display on the LCD.
+    def lcd_println(self, string, line):
+        """Writes a string to the LCD on the specified line.
 
+        This method will ignore all extra characters that don't fit on the
+        specified line.
         string: the string to be printed
         line: the line on which it will be printed
         """
@@ -116,6 +118,37 @@ class LCD_i2c:
 
         for i in range(self.lcd_width): # Extra characters will be ignored.
             self.lcd_write_byte(ord(string[i]), self.LCD_CHR)
+
+    def lcd_print(self, string, scroll_time = 5):
+        """Writes a string to the LCD.
+
+        This method will display all text given in the string variable. If the
+        string contains more characters than can be displayed, it will scrol
+        through the text.
+        string: the string to be printed
+        scroll_time: the time to wait before printing the next line
+        """
+
+        if len(string) <= self.lcd_width:
+            self.lcd_println(string, 1)
+
+        # Split string into chunks of a WIDTH number of characters
+        lines = [string[i:i+self.lcd_width] for i in range(0, len(string), self.lcd_width)]
+
+        i = len(lines)
+        j = 0
+        if i <= self.lcd_max_lines: # No need to scroll
+            while j < i:
+                self.lcd_println(lines[j], j + 1)
+                j = j + 1
+        else: # Need to scroll through the string
+            while j < 1:
+                if j + 1 == i:
+                    break
+                k = 0
+                while k < (self.lcd_max_lines - 1):
+                    self.lcd_println(lines[j], k + 1)
+                    k = k + 1
 
     def lcd_clear(self):
         """Clears all the text on the LCD."""
