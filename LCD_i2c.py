@@ -126,7 +126,7 @@ class LCD_i2c:
         string contains more characters than can be displayed, it will scrol
         through the text.
         string: the string to be printed
-        scroll_time: the time to wait before printing the next line
+        scroll_time: the time in seconds to wait before printing the next line
         """
 
         if len(string) <= self.lcd_width:
@@ -147,7 +147,10 @@ class LCD_i2c:
                     break
                 k = 0
                 while k < (self.lcd_lines + 1):
-                    self.lcd_println(lines[j + k], k + 1)
+                    try:
+                        self.lcd_println(lines[j + k], k + 1)
+                    except IndexError: # We're done printing everything.
+                        pass
                     k = k + 1
                 sleep(scroll_time)
                 j = j + 1
