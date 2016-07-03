@@ -30,7 +30,7 @@ class LCD_i2c:
     bus = smbus.SMBus(1)
     address = None
     lcd_width = None
-    lcd_max_lines = None
+    lcd_lines = None
     lcd_backlight = None
 
     LCD_CHR = 1 # Mode - Sending data
@@ -51,10 +51,10 @@ class LCD_i2c:
     E_PULSE = 0.0005
     E_DELAY = 0.0005
 
-    def __init__(self, address = 0x27, lcd_width = 16, lcd_max_lines = 2, lcd_backlight = True):
+    def __init__(self, address = 0x27, lcd_width = 16, lcd_lines = 2, lcd_backlight = True):
         self.address = address
         self.lcd_width = lcd_width
-        self.lcd_max_lines = lcd_max_lines
+        self.lcd_lines = lcd_lines
         if lcd_backlight:
             self.lcd_backlight = self.LCD_BACKLIGHT_ON
         else:
@@ -137,7 +137,7 @@ class LCD_i2c:
 
         i = len(lines)
         j = 0
-        if i <= self.lcd_max_lines: # No need to scroll
+        if i <= self.lcd_lines: # No need to scroll
             while j < i:
                 self.lcd_println(lines[j], j + 1)
                 j = j + 1
@@ -146,8 +146,8 @@ class LCD_i2c:
                 if j + 1 == i:
                     break
                 k = 0
-                while k < (self.lcd_max_lines - 1):
-                    self.lcd_println(lines[j], k + 1)
+                while k < (self.lcd_lines + 1):
+                    self.lcd_println(lines[j + k], k + 1)
                     k = k + 1
                 sleep(scroll_time)
                 j = j + 1
@@ -155,7 +155,7 @@ class LCD_i2c:
     def lcd_clear(self):
         """Clears all the text on the LCD."""
 
-        for i in range(self.lcd_max_lines):
+        for i in range(self.lcd_lines):
             self.lcd_print(" ", i)
 
 if __name__ == "__main__":
