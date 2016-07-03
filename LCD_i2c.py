@@ -142,13 +142,15 @@ class LCD_i2c:
                 self.lcd_println(lines[j], j + 1)
                 j = j + 1
         else: # Need to scroll through the string
-            while j < 1:
+            while j < i:
                 if j + 1 == i:
                     break
                 k = 0
                 while k < (self.lcd_max_lines - 1):
                     self.lcd_println(lines[j], k + 1)
                     k = k + 1
+                sleep(scroll_time)
+                j = j + 1
 
     def lcd_clear(self):
         """Clears all the text on the LCD."""
