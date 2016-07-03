@@ -28,10 +28,10 @@ from time import sleep
 class LCD_i2c:
 
     bus = smbus.SMBus(1)
-    address = None
-    lcd_width = None
-    lcd_lines = None
-    lcd_backlight = None
+    ADDRESS = None
+    WIDTH = None
+    LINES = None
+    BACKLIGHT = None
 
     LCD_CHR = 1 # Mode - Sending data
     LCD_CMD = 0 # Mode - Sending command
@@ -42,8 +42,8 @@ class LCD_i2c:
     LCD_LINE_3_ADDRESS = 0x94
     LCD_LINE_4_ADDRESS = 0xD4
 
-    LCD_BACKLIGHT_ON = 0x08
-    LCD_BACKLIGHT_OFF = 0x00
+    BACKLIGHT_ON = 0x08
+    BACKLIGHT_OFF = 0x00
 
     ENABLE = 0b00000100 # Enable bit
 
@@ -51,20 +51,20 @@ class LCD_i2c:
     E_PULSE = 0.0005
     E_DELAY = 0.0005
 
-    def __init__(self, address = 0x27, lcd_width = 16, lcd_lines = 2, lcd_backlight = True):
-        self.address = address
-        self.lcd_width = lcd_width
-        self.lcd_lines = lcd_lines
-        if lcd_backlight:
-            self.lcd_backlight = self.LCD_BACKLIGHT_ON
+    def __init__(self, address = 0x27, width = 16, lines = 2, backlight = True):
+        self.ADDRESS = address
+        self.WIDTH = width
+        self.LINES = lines
+        if backlight:
+            self.BACKLIGHT = self.BACKLIGHT_ON
         else:
-            self.lcd_backlight = self.LCD_BACKLIGHT_OFF
+            self.BACKLIGHT = self.BACKLIGHT_OFF
 
         # Initialise display
         self.lcd_write_byte(0x33, self.LCD_CMD) # 110011 Initialise
         self.lcd_write_byte(0x32, self.LCD_CMD) # 110010 Initialise
         self.lcd_write_byte(0x06, self.LCD_CMD) # 000110 Cursor move direction
-        self.lcd_write_byte(0x0C, self.LCD_CMD) # 001100 Display On,Cursor Off, Blink Off
+        self.lcd_write_byte(0x0C, self.LCD_CMD) # 001100 Display On, Cursor Off, Blink Off
         self.lcd_write_byte(0x28, self.LCD_CMD) # 101000 Data length, number of lines, font size
         self.lcd_write_byte(0x01, self.LCD_CMD) # 000001 Clear display
         sleep(self.E_DELAY)
@@ -72,9 +72,9 @@ class LCD_i2c:
     def lcd_toggle_enable(self, byte):
         """Enables toggle."""
         sleep(self.E_DELAY)
-        self.bus.write_byte(self.address, (byte | self.ENABLE))
+        self.bus.write_byte(self.ADDRESS, (byte | self.ENABLE))
         sleep(self.E_PULSE)
-        self.bus.write_byte(self.address,(byte & ~self.ENABLE))
+        self.bus.write_byte(self.ADDRESS,(byte & ~self.ENABLE))
         sleep(self.E_DELAY)
 
     def lcd_write_byte(self, byte, mode):
@@ -84,13 +84,13 @@ class LCD_i2c:
         mode: sending data or a command. 1 for data, 0 for a command.
         """
 
-        byte_high = mode | (byte & 0xF0) | self.lcd_backlight
-        byte_low = mode | (byte << 4) & 0xF0 | self.lcd_backlight
+        byte_high = mode | (byte & 0xF0) | self.BACKLIGHT
+        byte_low = mode | (byte << 4) & 0xF0 | self.BACKLIGHT
 
-        self.bus.write_byte(self.address, byte_high)
+        self.bus.write_byte(self.ADDRESS, byte_high)
         self.lcd_toggle_enable(byte_high)
 
-        self.bus.write_byte(self.address, byte_low)
+        self.bus.write_byte(self.ADDRESS, byte_low)
         self.lcd_toggle_enable(byte_low)
 
     def lcd_println(self, string, line):
@@ -102,7 +102,7 @@ class LCD_i2c:
         line: the line on which it will be printed
         """
 
-        string = string.ljust(self.lcd_width, " ")
+        string = string.ljust(self.WIDTH, " ")
 
         # Tell where in the memory the string has to be written to
         line_address = self.LCD_LINE_1_ADDRESS
@@ -116,7 +116,7 @@ class LCD_i2c:
             line_address = self.LCD_LINE_4_ADDRESS
         self.lcd_write_byte(line_address, self.LCD_CMD)
 
-        for i in range(self.lcd_width): # Extra characters will be ignored.
+        for i in range(self.WIDTH): # Extra characters will be ignored.
             self.lcd_write_byte(ord(string[i]), self.LCD_CHR)
 
     def lcd_print(self, string, scroll_time = 5):
@@ -129,15 +129,15 @@ class LCD_i2c:
         scroll_time: the time in seconds to wait before printing the next line
         """
 
-        if len(string) <= self.lcd_width:
+        if len(string) <= self.WIDTH:
             self.lcd_println(string, 1)
 
         # Split string into chunks of a WIDTH number of characters
-        lines = [string[i:i+self.lcd_width] for i in range(0, len(string), self.lcd_width)]
+        lines = [string[i:i+self.WIDTH] for i in range(0, len(string), self.WIDTH)]
 
         i = len(lines)
         j = 0
-        if i <= self.lcd_lines: # No need to scroll
+        if i <= self.LINES: # No need to scroll
             while j < i:
                 self.lcd_println(lines[j], j + 1)
                 j = j + 1
@@ -146,7 +146,7 @@ class LCD_i2c:
                 if j + 1 == i:
                     break
                 k = 0
-                while k < (self.lcd_lines + 1):
+                while k < (self.LINES + 1):
                     try:
                         self.lcd_println(lines[j + k], k + 1)
                     except IndexError: # We're done printing everything.
@@ -158,7 +158,7 @@ class LCD_i2c:
     def lcd_clear(self):
         """Clears all the text on the LCD."""
 
-        for i in range(self.lcd_lines):
+        for i in range(self.LINES):
             self.lcd_print(" ", i)
 
 if __name__ == "__main__":
