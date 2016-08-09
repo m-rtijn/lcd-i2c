@@ -16,3 +16,5 @@ To install this module, run the following commands:
     python setup.py build
     python setup.py install
 ```
+
+The second command might need to run as superuser or using sudo.
