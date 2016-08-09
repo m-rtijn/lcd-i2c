@@ -6,3 +6,13 @@ This module supports screens with up to 4 lines. There's no maximum width.
 
 You can simply import the LCD_i2c as shown in the example and easily print to the
 display.
+
+
+# Installation
+
+To install this module, run the following commands:
+
+```
+    python setup.py build
+    python setup.py install
+```
