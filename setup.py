@@ -4,7 +4,7 @@ def readme():
     with open('README.md') as f:
         return f.read()
 
-setup(name='lcd_i2c-raspberrypi',
+setup(name='lcd_i2c_raspberrypi',
     version='1.0',
     description='A module to easily use a simple LCD with an i2c backpack with a raspberry pi',
     classifiers=[
@@ -15,7 +15,7 @@ setup(name='lcd_i2c-raspberrypi',
     author='MrTijn/Tijndagamer',
     author_email='tijndagamer25@gmail.com',
     license='GPLv3',
-    packages=['lcd-i2c'],
+    packages=['lcd_i2c'],
     install_requires=[
         'smbus',
     ],
