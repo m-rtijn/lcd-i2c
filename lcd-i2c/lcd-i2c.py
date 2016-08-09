@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import smbus
 from time import sleep
 
-class lcd-i2c:
+class lcd_i2c:
 
     bus = smbus.SMBus(1)
     ADDRESS = None
