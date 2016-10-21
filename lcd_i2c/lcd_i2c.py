@@ -93,7 +93,7 @@ class lcd_i2c:
         self.bus.write_byte(self.ADDRESS, byte_low)
         self.lcd_toggle_enable(byte_low)
 
-    def lcd_println(self, string, line):
+    def println(self, string, line):
         """Writes a string to the LCD on the specified line.
 
         This method will ignore all extra characters that don't fit on the
@@ -119,7 +119,7 @@ class lcd_i2c:
         for i in range(self.WIDTH): # Extra characters will be ignored.
             self.lcd_write_byte(ord(string[i]), self.LCD_CHR)
 
-    def lcd_print(self, string, scroll_time = 5):
+    def print(self, string, scroll_time = 5):
         """Writes a string to the LCD.
 
         This method will display all text given in the string variable. If the
@@ -155,12 +155,12 @@ class lcd_i2c:
                 sleep(scroll_time)
                 j = j + 1
 
-    def lcd_clear(self):
+    def clear(self):
         """Clears all the text on the LCD."""
 
         for i in range(self.LINES):
             self.lcd_print(" ", i)
 
 if __name__ == "__main__":
-    lcd = LCD_i2c()
-    lcd.lcd_print("test", 1)
+    lcd = lcd_i2c()
+    lcd.print("test", 1)
