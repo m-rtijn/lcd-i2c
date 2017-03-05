@@ -1,25 +1,25 @@
 #!/usr/bin/python
 """
-LCD-i2c.py
-    Python module to write to simple character screens with an i2c backpack.
+lcd_i2c.py
+This file is part of lcd_i2c
 
-This program uses (modified) parts of lcd_i2c.py by Matt Hawkins, licensed under the
+lcd_i2c uses (modified) parts of lcd_i2c.py by Matt Hawkins, licensed under the
 GNU GPL v3 or at your option any later version.
 
-Copyright 2016 Tijndagamer
+Copyright 2016, 2017 MrTijn/Tijndagamer
 
-This program is free software: you can redistribute it and/or modify
+lcd_i2c is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
-This program is distributed in the hope that it will be useful,
+lcd_i2c is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+along with lcd_i2c.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 import smbus
@@ -119,7 +119,7 @@ class lcd_i2c:
         for i in range(self.WIDTH): # Extra characters will be ignored.
             self.lcd_write_byte(ord(string[i]), self.LCD_CHR)
 
-    def print(self, string, scroll_time = 5):
+    def print_str(self, string, scroll_time = 5):
         """Writes a string to the LCD.
 
         This method will display all text given in the string variable. If the
@@ -163,4 +163,4 @@ class lcd_i2c:
 
 if __name__ == "__main__":
     lcd = lcd_i2c()
-    lcd.print("test", 1)
+    lcd.print_str("test", 1)
