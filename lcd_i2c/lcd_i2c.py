@@ -130,7 +130,7 @@ class lcd_i2c:
         """
 
         if len(string) <= self.WIDTH:
-            self.lcd_println(string, 1)
+            self.println(string, 1)
 
         # Split string into chunks of a WIDTH number of characters
         lines = [string[i:i+self.WIDTH] for i in range(0, len(string), self.WIDTH)]
@@ -139,7 +139,7 @@ class lcd_i2c:
         j = 0
         if i <= self.LINES: # No need to scroll
             while j < i:
-                self.lcd_println(lines[j], j + 1)
+                self.println(lines[j], j + 1)
                 j = j + 1
         else: # Need to scroll through the string
             while j < i:
@@ -148,7 +148,7 @@ class lcd_i2c:
                 k = 0
                 while k < (self.LINES + 1):
                     try:
-                        self.lcd_println(lines[j + k], k + 1)
+                        self.println(lines[j + k], k + 1)
                     except IndexError: # We're done printing everything.
                         pass
                     k = k + 1
@@ -159,7 +159,7 @@ class lcd_i2c:
         """Clears all the text on the LCD."""
 
         for i in range(self.LINES):
-            self.lcd_print(" ", i)
+            self.print_str(" ", i)
 
 if __name__ == "__main__":
     lcd = lcd_i2c()
